@@ -1,0 +1,60 @@
+# Recurrent Neural Network (RNN)
+
+A **Recurrent Neural Network (RNN)** is a type of neural network designed to work with **sequential data**, where the order of the data matters.
+
+Unlike a traditional neural network, an RNN has a **hidden state (memory)** that allows it to use information from previous time steps when processing the current input.
+
+### How RNN Works
+
+At each time step, the RNN receives:
+
+* The **current input** `xₜ`
+* The **previous hidden state** `hₜ₋₁`
+
+It then produces:
+
+* A **new hidden state** `hₜ`
+* Optionally, an **output** `yₜ`
+
+The basic equation is:
+
+`hₜ = tanh(Wₓₕ xₜ + Wₕₕ hₜ₋₁ + b)`
+
+The hidden state acts as the network's **memory**, carrying information from previous inputs to the next time step.
+
+### Example
+
+Consider the sentence:
+
+> "I love machine learning"
+
+The RNN processes it one word at a time:
+
+`I → love → machine → learning`
+
+When processing **"learning"**, the hidden state contains information gathered from the previous words. Therefore, the network can use the context of the earlier words to understand the current word.
+
+### Applications
+
+RNNs can be used for:
+
+* **Text generation**
+* **Language modeling**
+* **Machine translation**
+* **Speech recognition**
+* **Time-series prediction**
+* **Sentiment analysis**
+
+### Problem with RNNs
+
+A major problem with basic RNNs is the **vanishing gradient problem**. When sequences become long, information from earlier time steps can become difficult for the network to retain.
+
+This makes it difficult for a basic RNN to learn **long-term dependencies**.
+
+To address this problem, more advanced architectures such as **LSTM (Long Short-Term Memory)** and **GRU (Gated Recurrent Unit)** were introduced.
+
+### Key Idea
+
+> **RNN = Neural network + memory for sequential data**
+
+The key feature of an RNN is that it **reuses the hidden state from the previous time step**, allowing it to process sequences while maintaining information about what it has seen before.
