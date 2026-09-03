@@ -18,7 +18,7 @@ loader = PyPDFLoader("./rnn.pdf")
 # Load the file contents into a list of Document objects
 documents = loader.load()
 
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap=0)
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 chunks = text_splitter.split_text(documents[0].page_content)
 
 template = ChatPromptTemplate.from_messages([("system", "You are an AI that summarizes text"), ("human", "{text}")])
