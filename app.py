@@ -49,18 +49,24 @@ Question:
     ]
 )
 
-docs = retriever.invoke("What is RNN?")
+while True:
 
-# 2. Convert documents into context
-context = "\n\n".join(doc.page_content for doc in docs)
-
-messages = prompt.invoke({
-    "context": context,
-    "question": "What is RNN?"
-})
-
-response = llm.invoke(messages)
-
-print("===CONTENT===")
-
-print(response.content)
+    ques = input("")
+    if ques == "exit":
+        break
+    
+    docs = retriever.invoke(ques)
+    
+    # 2. Convert documents into context
+    context = "\n\n".join(doc.page_content for doc in docs)
+    
+    messages = prompt.invoke({
+        "context": context,
+        "question": ques
+    })
+    
+    response = llm.invoke(messages)
+    
+    print("===CONTENT===")
+    
+    print(response.content)
