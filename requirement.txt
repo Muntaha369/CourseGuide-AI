@@ -8,6 +8,7 @@ langchain-openai
 langchain-mistralai
 openai
 mistralai
+langchain-openrouter
 
 # Vector Database
 

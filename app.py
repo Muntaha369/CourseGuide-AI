@@ -1,12 +1,66 @@
-from langchain_docling.loader import DoclingLoader
+from dotenv import load_dotenv
+from langchain_openrouter import ChatOpenRouter
+from langchain_mistralai import MistralAIEmbeddings
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_community.vectorstores import Chroma
 
-FILE_PATH = "https://arxiv.org/pdf/2408.09869"
+load_dotenv()
 
-loader = DoclingLoader(file_path=FILE_PATH)
+llm = ChatOpenRouter(
+    model="openrouter/free",
+    max_tokens=500
+)
 
-# Load all documents
-documents = loader.load()
+embedding_models = MistralAIEmbeddings()
 
-# For large datasets, lazily load documents
-for document in loader.lazy_load():
-    print(document)
+vectorstore = Chroma(persist_directory="vector_store/chroma_db",embedding_function=embedding_models)
+
+retriever = vectorstore.as_retriever(
+    search_type = "mmr",
+    search_kwargs = {
+        "k" : 4,
+        "fetch_k":10,
+        "lambda_mult" :0.5
+    }
+)
+
+#prompt template 
+prompt = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            """You are a helpful AI assistant.
+
+Use ONLY the provided context to answer the question.
+
+If the answer is not present in the context,
+say: "I could not find the answer in the document."
+"""
+        ),
+        (
+            "human",
+            """Context:
+{context}
+
+Question:
+{question}
+"""
+        )
+    ]
+)
+
+docs = retriever.invoke("What is RNN?")
+
+# 2. Convert documents into context
+context = "\n\n".join(doc.page_content for doc in docs)
+
+messages = prompt.invoke({
+    "context": context,
+    "question": "What is RNN?"
+})
+
+response = llm.invoke(messages)
+
+print("===CONTENT===")
+
+print(response.content)

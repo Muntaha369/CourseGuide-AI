@@ -11,6 +11,7 @@ llm = ChatMistralAI(
     max_tokens=500
 )
 
+template = ChatPromptTemplate.from_messages([("system", "You are an AI that summarizes text"), ("human", "{text}")]) # pyright: ignore[reportCallIssue]
 
 # Initialize the text loader with your file path
 loader = PyPDFLoader("./rnn.pdf")
@@ -21,12 +22,11 @@ documents = loader.load()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
 chunks = text_splitter.split_text(documents[0].page_content)
 
-template = ChatPromptTemplate.from_messages([("system", "You are an AI that summarizes text"), ("human", "{text}")])
 
 prompt = template.format_messages(text =  documents[0].page_content)
 res = llm.invoke(prompt)  
 
-print(res.content)
+print(res.content) 
 # print(loader)
 # print(documents[0])
 # print("\n____________________________________________")
